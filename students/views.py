@@ -4,6 +4,8 @@ from rest_framework.response import Response
 from .models import Student, Course
 from .serializers import StudentSerializer, CourseSerializer
 
+from django_filters.rest_framework import DjangoFilterBackend
+from rest_framework.filters import SearchFilter
 
 class StudentViewSet(viewsets.GenericViewSet, mixins.ListModelMixin, mixins.RetrieveModelMixin,
                      mixins.CreateModelMixin, mixins.UpdateModelMixin, mixins.DestroyModelMixin):
@@ -35,3 +37,12 @@ class CourseViewSet(viewsets.GenericViewSet, mixins.ListModelMixin, mixins.Retri
             return Response({'error': 'Student not found'}, status=404)
 
 
+
+
+class StudentViewSet(viewsets.GenericViewSet, mixins.ListModelMixin, mixins.RetrieveModelMixin,
+                     mixins.CreateModelMixin, mixins.UpdateModelMixin, mixins.DestroyModelMixin):
+    queryset = Student.objects.all()
+    serializer_class = StudentSerializer
+    filter_backends = (DjangoFilterBackend, SearchFilter)
+    filterset_fields = ['first_name', 'last_name', 'age', 'grade']
+    search_fields = ['first_name', 'last_name']
